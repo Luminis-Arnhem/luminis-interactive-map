@@ -1,3 +1,7 @@
+body {
+    background-color: green;
+}
+
 .custom-map{
     position: relative;
     width: 400px;
@@ -17,7 +21,7 @@
     left: 0;
     width: 100%;
     height: 0;
-    padding-bottom: 100%;
+    padding-bottom: 66.66667%;
     transition: 0.4s all;
 }
 
@@ -28,9 +32,11 @@
 }
 
 .custom-map .zoom-level-0.part-0{
+    top: -5%;
+    left: -5%;
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 110%;
+    height: 110%;
 }
 
 .custom-map .controls{
