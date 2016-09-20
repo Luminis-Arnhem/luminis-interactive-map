@@ -22,40 +22,49 @@
 
     <script src="js/custom-map.js"></script>
     <script>
-        var customMapElms = document.querySelectorAll('.custom-map');
-        for (var i = 0; i < customMapElms.length; i += 1) {
-            customMapElms[i].customMap = new CustomMap(customMapElms[i], {
-                innerHtml: {
-                    upButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#up"></use></svg>',
-                    rightButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#right"></use></svg>',
-                    downButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#down"></use></svg>',
-                    leftButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#left"></use></svg>',
-                    zoomInButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_in"></use></svg>',
-                    resetZoomButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#reset"></use></svg>',
-                    zoomOutButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_out"></use></svg>'
-                }
-            });
-
-            customMapElms[i].customMap.setBoundaries({
-                topRight: {
-                    lat: 51.7326435,
-                    long: 5.8584912
-                },
-                bottomLeft: {
-                    lat: 51.7068812,
-                    long: 5.9144528
-                }
-            });
-            customMapElms[i].marker1 = customMapElms[i].customMap.addMarker("http://hollebm.nl/images/logo.svg", 50, 50, -25, -25);
-            customMapElms[i].customMap.setMarker(customMapElms[i].marker1, {
-                lat: 51.7172969,
-                long: 5.8874715
-            });
-            // customMapElms[i].customMap.positionMapAbsolute({
-            //     lat: 51.7172969,
-            //     long: 5.8874715
-            // });
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
         }
+        function showPosition(position) {
+            var customMapElms = document.querySelectorAll('.custom-map');
+            for (var i = 0; i < customMapElms.length; i += 1) {
+                customMapElms[i].customMap = new CustomMap(customMapElms[i], {
+                    innerHtml: {
+                        upButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#up"></use></svg>',
+                        rightButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#right"></use></svg>',
+                        downButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#down"></use></svg>',
+                        leftButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#left"></use></svg>',
+                        zoomInButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_in"></use></svg>',
+                        resetZoomButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#reset"></use></svg>',
+                        zoomOutButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_out"></use></svg>'
+                    },
+                    useSVG: true
+                });
+
+                customMapElms[i].customMap.setBoundaries({
+                    topRight: {
+                        lat: 51.963136,
+                        long: 5.936039
+                    },
+                    bottomLeft: {
+                        lat: 51.972190,
+                        long: 5.953433
+                    }
+                });
+                customMapElms[i].marker1 = customMapElms[i].customMap.addMarker("images/marker.png", 50, 50, -25, -25);
+                customMapElms[i].customMap.setMarker(customMapElms[i].marker1, {
+                    lat: position.coords.latitude,
+                    long: position.coords.longitude
+                });
+                // customMapElms[i].customMap.positionMapAbsolute({
+                //     lat: 51.7172969,
+                //     long: 5.8874715
+                // });
+            }
+        }
+
     </script>
 </body>
 </html>

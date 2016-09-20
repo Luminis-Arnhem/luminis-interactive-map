@@ -11,6 +11,7 @@ var CustomMap = (function () {
             initialZoomFactor: 1,// factor of size of map
             initialRelativePosition: {x: 0.5, y: 0.5},
             cssAnimationTime: 0.4,//seconds
+            useSVG: true,
             classes: {
                 view: 'view',
                 map: 'map',
@@ -66,12 +67,12 @@ var CustomMap = (function () {
             this.viewElm.classList.add(this.options.classes.view);
             this.viewElm.appendChild(this.mapElm);
             this.elm.appendChild(this.viewElm);
-            this.createMapParts(this.mapElm, 0);
             this.mapElm.initialWidth = this.mapElm.scrollWidth;
             this.mapElm.initialHeight = this.mapElm.scrollHeight;
             this.mapElm.style.width = this.mapElm.initialWidth + "px";
             this.mapElm.style.height = this.mapElm.initialHeight + "px";
             this.mapElm.style.padding = 0;
+            this.createMapParts(this.mapElm, 0);
             this.controlsElm = document.createElement('div');
             this.controlsElm.classList.add(this.options.classes.controls);
             this.elm.appendChild(this.controlsElm);
@@ -114,19 +115,32 @@ var CustomMap = (function () {
             this.zoom(newZoomFactor, this.position);
         },
         createMapParts: function (elm, zoomLevel) {
-            if (zoomLevel === 0){
-                var partElm = this.createPartElm(zoomLevel, 0);
-                elm.appendChild(partElm);
-                this.createMapParts(partElm, zoomLevel + 1);
-            } else if (zoomLevel < this.options.numberOfZoomLevels) {
-                for (var i = 0; i < this.options.horizontalNumberOfParts * this.options.verticalNumberOfParts; i += 1) {
-                    var partElm = this.createPartElm(zoomLevel, i, elm);
-                    partElm.style.width = (100 / this.options.horizontalNumberOfParts) + "%";
-                    partElm.style.height = (100 / this.options.verticalNumberOfParts) + "%";
+            if(this.options.useSVG) {
+                var svgElm = this.createSVGElm();
+                elm.appendChild(svgElm);
+            } else {
+                if (zoomLevel === 0) {
+                    var partElm = this.createPartElm(zoomLevel, 0);
                     elm.appendChild(partElm);
                     this.createMapParts(partElm, zoomLevel + 1);
+                } else if (zoomLevel < this.options.numberOfZoomLevels) {
+                    for (var i = 0; i < this.options.horizontalNumberOfParts * this.options.verticalNumberOfParts; i += 1) {
+                        var partElm = this.createPartElm(zoomLevel, i, elm);
+                        partElm.style.width = (100 / this.options.horizontalNumberOfParts) + "%";
+                        partElm.style.height = (100 / this.options.verticalNumberOfParts) + "%";
+                        elm.appendChild(partElm);
+                        this.createMapParts(partElm, zoomLevel + 1);
+                    }
                 }
             }
+        },
+        createSVGElm: function () {
+            var partElm = document.createElement('img');
+            partElm.src = "images/INNOVATE2016_IPKW_plattegrondA3_v3.svg";
+            partElm.classList.add('part');
+            partElm.classList.add('zoom-level-' + 0);
+            partElm.classList.add('part-' + 0);
+            return partElm;
         },
         createPartElm: function (zoomLevel, i, parentElm) {
             var partElm = document.createElement('div');
@@ -162,8 +176,8 @@ var CustomMap = (function () {
         },
         setMarker: function (marker, coordinates) {
             var position = this.relativePosition(coordinates);
-            marker.elm.style.left = (position.x * 100) + '%';
-            marker.elm.style.top = (position.y * 100) + '%';
+            marker.elm.style.top = (position.x * 100) + '%';
+            marker.elm.style.right = (position.y * 100) + '%';
         },
         removeMarker: function (marker) {
             this.mapElm.removeChild(marker.elm);
