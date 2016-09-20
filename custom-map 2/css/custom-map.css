@@ -1,0 +1,140 @@
+.custom-map{
+    position: relative;
+    width: 400px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.custom-map .view{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.custom-map .map{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    transition: 0.4s all;
+}
+
+.custom-map .part{
+    float: left;
+    background-size: cover;
+    transition: 0.4s all;
+}
+
+.custom-map .zoom-level-0.part-0{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.custom-map .controls{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 140px;
+    height: 100px;
+}
+
+.custom-map .controls .control-button{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+}
+
+.custom-map .controls .control-button .icon{
+    fill: white;
+    stroke: rgba(0, 0, 0, 0.4);
+    stroke-width: 4; 
+}
+
+.custom-map .controls .up-button{
+    top: 0;
+    right: 35px;
+}
+
+.custom-map .controls .right-button{
+    top: 35px;
+    right: 0;
+}
+
+.custom-map .controls .down-button{
+    right: 35px;
+    bottom: 0;
+}
+
+.custom-map .controls .left-button{
+    top: 35px;
+    right: 70px;
+}
+
+.custom-map .controls .zoom-in-button{
+    top: 0;
+    left: 0;
+}
+
+.custom-map .controls .reset-zoom-button{
+    top: 35px;
+    left: 0;
+}
+
+.custom-map .controls .zoom-out-button{
+    bottom: 0;
+    left: 0;
+}
+
+.custom-map .marker{
+    position: absolute;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/* temp styling during development (to be deleted) */
+
+html{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-map{
+    width: 100%;
+    height: 100%;
+}
+
+.custom-map .part{
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+/*.custom-map .part-0{
+    background: red;
+}
+
+.custom-map .part-1{
+    background: orangered;
+}
+
+.custom-map .part-2{
+    background: darkorange;
+}
+
+.custom-map .part-3{
+    background: orange;
+}
+
+.custom-map .zoom-level-1.part-3 .zoom-level-2.part-0 .zoom-level-3.part-0{
+    background: blue;
+}*/

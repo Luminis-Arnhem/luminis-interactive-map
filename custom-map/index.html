@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom map</title>
+    <link rel="stylesheet" href="css/custom-map.css">
+</head>
+<body>
+    <svg display="none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+    <defs>
+        <path id="zoom_out" d="M96.9,85.1L73.2,65c-2.4-2.2-5.1-3.2-7.2-3.1c5.6-6.5,9-15,9-24.3C75,16.8,58.2,0,37.5,0 S0,16.8,0,37.5S16.8,75,37.5,75c9.3,0,17.8-3.4,24.3-9c-0.1,2.1,0.9,4.7,3.1,7.2l20.1,23.7c3.4,3.8,9.1,4.2,12.5,0.7 C101.1,94.2,100.7,88.5,96.9,85.1z M37.5,62.5c-13.8,0-25-11.2-25-25s11.2-25,25-25s25,11.2,25,25S51.3,62.5,37.5,62.5z M18.8,31.3 h37.5v12.5H18.8V31.3z"/>
+        <path id="zoom_in" d="M96.9,85.1L73.2,65c-2.4-2.2-5.1-3.2-7.2-3.1c5.6-6.5,9-15,9-24.3C75,16.8,58.2,0,37.5,0 S0,16.8,0,37.5S16.8,75,37.5,75c9.3,0,17.8-3.4,24.3-9c-0.1,2.1,0.9,4.7,3.1,7.2l20.1,23.7c3.4,3.8,9.1,4.2,12.5,0.7 C101.1,94.2,100.7,88.5,96.9,85.1z M37.5,62.5c-13.8,0-25-11.2-25-25s11.2-25,25-25s25,11.2,25,25S51.3,62.5,37.5,62.5z M43.8,18.8 H31.3v12.5H18.8v12.5h12.5v12.5h12.5V43.8h12.5V31.3H43.8V18.8z"/>
+        <path id="reset" d="M100,37.5H62.5l14-14c-7.1-7.1-16.5-11-26.5-11s-19.4,3.9-26.5,11S12.5,40,12.5,50s3.9,19.4,11,26.5 s16.5,11,26.5,11s19.4-3.9,26.5-11c0.6-0.6,1.2-1.2,1.7-1.8l9.4,8.2C78.5,93.4,65,100,50,100C22.4,100,0,77.6,0,50S22.4,0,50,0 c13.8,0,26.3,5.6,35.4,14.6L100,0V37.5z"/>
+        <path id="up" d="M50,0L1.6,48.4h29V100h38.7V48.4h29L50,0z"/>
+        <path id="right" d="M100,50L51.6,1.6v29H0v38.7h51.6v29L100,50z"/>
+        <path id="left" d="M0,50l48.4,48.4v-29H100V30.6H48.4v-29L0,50z"/>
+        <path id="down" d="M50,100l48.4-48.4h-29V0H30.6v51.6h-29L50,100z"/>
+    </defs>
+    </svg>
+
+    <div class="custom-map"></div>
+
+    <script src="js/custom-map.js"></script>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+        function showPosition(position) {
+            var customMapElms = document.querySelectorAll('.custom-map');
+            for (var i = 0; i < customMapElms.length; i += 1) {
+                customMapElms[i].customMap = new CustomMap(customMapElms[i], {
+                    innerHtml: {
+                        upButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#up"></use></svg>',
+                        rightButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#right"></use></svg>',
+                        downButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#down"></use></svg>',
+                        leftButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#left"></use></svg>',
+                        zoomInButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_in"></use></svg>',
+                        resetZoomButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#reset"></use></svg>',
+                        zoomOutButton: '<svg class="icon" viewBox="-4 -4 108 108"><use xlink:href="#zoom_out"></use></svg>'
+                    },
+                    useSVG: true
+                });
+
+                customMapElms[i].customMap.setBoundaries({
+                    topRight: {
+                        lat: 51.963136,
+                        long: 5.936039
+                    },
+                    bottomLeft: {
+                        lat: 51.972190,
+                        long: 5.953433
+                    }
+                });
+                customMapElms[i].marker1 = customMapElms[i].customMap.addMarker("images/marker.png", 50, 50, -25, -25);
+                customMapElms[i].customMap.setMarker(customMapElms[i].marker1, {
+                    lat: position.coords.latitude,
+                    long: position.coords.longitude
+                });
+                // customMapElms[i].customMap.positionMapAbsolute({
+                //     lat: 51.7172969,
+                //     long: 5.8874715
+                // });
+            }
+        }
+
+    </script>
+</body>
+</html>
