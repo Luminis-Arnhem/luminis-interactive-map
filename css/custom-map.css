@@ -20,8 +20,8 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    /*padding-bottom: 100%;*/
+    height: 0;
+    padding-bottom: 66.66667%;
     transition: 0.4s all;
 }
 
