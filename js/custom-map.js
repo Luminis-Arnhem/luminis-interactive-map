@@ -11,7 +11,11 @@ var CustomMap = (function () {
             initialZoomFactor: 1,// factor of size of map
             initialRelativePosition: {x: 0.5, y: 0.5},
             cssAnimationTime: 0.4,//seconds
-            useSVG: true,
+            createPartElms: true,
+            useBackgroundImages: true,
+            backgroundExtension: "jpg",
+            mapAngle: 180,
+            //Vervang elm per optie
             classes: {
                 view: 'view',
                 map: 'map',
@@ -24,6 +28,7 @@ var CustomMap = (function () {
                 zoomInButton: 'zoom-in-button',
                 resetZoomButton: 'reset-zoom-button',
                 zoomOutButton: 'zoom-out-button',
+                centreButton: 'centre-button',
                 initiated: 'initiated',
                 marker: 'marker'
             },
@@ -34,7 +39,9 @@ var CustomMap = (function () {
                 leftButton: '<',
                 zoomInButton: '+',
                 resetZoomButton: 'o',
-                zoomOutButton: '-'
+                zoomOutButton: '-',
+                centreButton: '#',
+                zoomLevelElm: null
             }
         };
         // overwrite options with user defined settings
@@ -76,7 +83,7 @@ var CustomMap = (function () {
             this.controlsElm = document.createElement('div');
             this.controlsElm.classList.add(this.options.classes.controls);
             this.elm.appendChild(this.controlsElm);
-            this.helpers.forEach(["up", "right", "down", "left", "zoomIn", "resetZoom", "zoomOut"], this.createControlElm.bind(this));
+            this.helpers.forEach(["up", "right", "down", "left", "zoomIn", "resetZoom", "zoomOut", "centre"], this.createControlElm.bind(this));
         },
         createControlElm: function (name) {
             this[name + "ButtonElm"] = document.createElement('div');
@@ -114,33 +121,29 @@ var CustomMap = (function () {
             var newZoomFactor = this.zoomFactor - this.options.zoomStepSize;
             this.zoom(newZoomFactor, this.position);
         },
+        centreButtonElmClick: function () {
+            var marker = this.markers[0];
+            this.positionMapRelative(marker.position)
+        },
         createMapParts: function (elm, zoomLevel) {
-            if(this.options.useSVG) {
-                var svgElm = this.createSVGElm();
-                elm.appendChild(svgElm);
-            } else {
-                if (zoomLevel === 0) {
-                    var partElm = this.createPartElm(zoomLevel, 0);
+            if (zoomLevel === 0) {
+                var partElm = this.createPartElm(zoomLevel, 0);
+                if(this.options.innerHtml.zoomLevelElm) {
+                    partElm.innerHTML = this.options.innerHtml.zoomLevelElm;
+                }
+                elm.appendChild(partElm);
+                if(this.options.createPartElms) {
+                    this.createMapParts(partElm, zoomLevel + 1);
+                }
+            } else if (zoomLevel < this.options.numberOfZoomLevels) {
+                for (var i = 0; i < this.options.horizontalNumberOfParts * this.options.verticalNumberOfParts; i += 1) {
+                    var partElm = this.createPartElm(zoomLevel, i, elm);
+                    partElm.style.width = (100 / this.options.horizontalNumberOfParts) + "%";
+                    partElm.style.height = (100 / this.options.verticalNumberOfParts) + "%";
                     elm.appendChild(partElm);
                     this.createMapParts(partElm, zoomLevel + 1);
-                } else if (zoomLevel < this.options.numberOfZoomLevels) {
-                    for (var i = 0; i < this.options.horizontalNumberOfParts * this.options.verticalNumberOfParts; i += 1) {
-                        var partElm = this.createPartElm(zoomLevel, i, elm);
-                        partElm.style.width = (100 / this.options.horizontalNumberOfParts) + "%";
-                        partElm.style.height = (100 / this.options.verticalNumberOfParts) + "%";
-                        elm.appendChild(partElm);
-                        this.createMapParts(partElm, zoomLevel + 1);
-                    }
                 }
             }
-        },
-        createSVGElm: function () {
-            var partElm = document.createElement('img');
-            partElm.src = "images/INNOVATE2016_IPKW_plattegrondA3_v3.svg";
-            partElm.classList.add('part');
-            partElm.classList.add('zoom-level-' + 0);
-            partElm.classList.add('part-' + 0);
-            return partElm;
         },
         createPartElm: function (zoomLevel, i, parentElm) {
             var partElm = document.createElement('div');
@@ -176,7 +179,8 @@ var CustomMap = (function () {
         },
         setMarker: function (marker, coordinates) {
             var position = this.relativePosition(coordinates);
-            marker.elm.style.top = (position.x * 100) + '%';
+            marker.position = position;
+            marker.elm.style.bottom = (position.x * 100) + '%';
             marker.elm.style.right = (position.y * 100) + '%';
         },
         removeMarker: function (marker) {
@@ -185,8 +189,8 @@ var CustomMap = (function () {
         },
         relativePosition: function (coordinates) {
             return {
-                x: (coordinates.lat - this.boundaries.topRight.lat) / (this.boundaries.bottomLeft.lat - this.boundaries.topRight.lat),
-                y: (coordinates.long - this.boundaries.topRight.long) / (this.boundaries.bottomLeft.long - this.boundaries.topRight.long)
+                x: ((coordinates.lat - this.boundaries.bottomRight.lat) / (this.boundaries.topLeft.lat - this.boundaries.bottomRight.lat )),
+                y: ((coordinates.long - this.boundaries.bottomRight.long) / (this.boundaries.topLeft.long - this.boundaries.bottomRight.long))
             }
         },
         positionMapRelative: function (position, mapSizeAfterZoom) {
@@ -204,7 +208,9 @@ var CustomMap = (function () {
                     y: (this.viewElm.scrollHeight / 2) / this.mapElm.scrollHeight
                 }
             }
-            setTimeout(this.setBackgroundImages.bind(this), this.options.cssAnimationTime * 1000);
+            if(this.options.useBackgroundImages) {
+                setTimeout(this.setBackgroundImages.bind(this), this.options.cssAnimationTime * 1000);
+            }
             this.mapElm.style.transform = "translate3d(" + -(position.x - centerOfView.x) * 100 + "%, " + -(position.y - centerOfView.y) * 100 + "%, 0)";
         },
         setBackgroundImages: function () {
@@ -212,7 +218,7 @@ var CustomMap = (function () {
                 if (partElm.zoomLevel <= this.zoomLevel && this.inView(partElm)){
                     partElm.style.opacity = 1;
                     if (partElm.zoomLevel === this.zoomLevel && !partElm.backgroundSet) {
-                        partElm.style.backgroundImage = "url(images/zoom-level-" + partElm.zoomLevel + "/part-" + partElm.partIndex + ".jpg)";
+                        partElm.style.backgroundImage = "url(images/zoom-level-" + partElm.zoomLevel + "/part-" + partElm.partIndex + "." + this.options.backgroundExtension + ")";
                         partElm.backgroundSet = true;
                     }
                 } else {
@@ -251,6 +257,13 @@ var CustomMap = (function () {
                 for (var i = 0; i < arr.length; i += 1) {
                     func(arr[i], i);
                 }
+            },
+            getPositionOfElement: function (elm) {
+                bodyRect = document.body.getBoundingClientRect();
+                var rect = elm.getBoundingClientRect();
+                var newX = rect.left / bodyRect.width;
+                var newY = rect.bottom / bodyRect.height ;
+                return {x: newX, y: newY}
             }
         }
     };

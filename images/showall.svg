@@ -1,0 +1,30 @@
+<svg id="_200_showall.png_showall.svg" data-name="200% showall.png, showall.svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="115" height="115" viewBox="0 0 115 115">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        font-size: 31.694px;
+        fill: #09f;
+        text-anchor: middle;
+        font-family: Lato;
+        font-weight: 300;
+      }
+    </style>
+    <filter id="filter" x="0" y="0" width="115" height="115" filterUnits="userSpaceOnUse">
+      <feGaussianBlur result="blur" stdDeviation="2.667" in="SourceAlpha"/>
+      <feComposite result="composite"/>
+      <feComposite result="composite-2"/>
+      <feComposite result="composite-3"/>
+      <feFlood result="flood" flood-opacity="0.25"/>
+      <feComposite result="composite-4" operator="in" in2="composite-3"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+      <feBlend result="blend-2" in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect id="Rechthoek_1" data-name="Rechthoek 1" class="cls-1" x="7" y="7" width="100" height="100" rx="5" ry="5"/>
+  <text id="Toon_alles" data-name="Toon alles" class="cls-2" x="58.84" y="50.313">Toon<tspan x="58.84" dy="38.033">alles</tspan></text>
+</svg>
